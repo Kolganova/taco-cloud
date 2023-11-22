@@ -10,6 +10,7 @@ import tacos.Ingredient;
 import tacos.Taco;
 import tacos.TacoOrder;
 import tacos.Type;
+import tacos.data.IngredientRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,21 @@ import java.util.stream.Collectors;
 @RequestMapping("/design")
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
+
+    private final IngredientRepository ingredientRepository;
+
+    public DesignTacoController(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
+
+    public void addIngredientToModel(Model model) {
+        Iterable<Ingredient> ingredients = ingredientRepository.findAll();
+        Type[] types = Type.values();
+        for (Type type : types) {
+            model.addAttribute(type.toString().toLowerCase(),
+            filterByType((List<Ingredient>) ingredients, type));
+        }
+    }
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
