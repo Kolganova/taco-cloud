@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public interface OrderRepository extends CrudRepository<TacoOrder, UUID> {
+public interface OrderRepository extends CrudRepository<TacoOrder, String> {
 
     List<TacoOrder> findByDeliveryZip(String deliveryZip);
     List<TacoOrder> readTacoOrderByDeliveryZipAndPlacedAtBetween(String deliveryZip, Date startDate, Date endDate);
