@@ -14,7 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@Entity(name = "Taco_Cloud_Order")
+@Entity
+@Table(name = "Taco_Order")
 public class TacoOrder implements Serializable {
 
     @Serial
@@ -42,6 +43,8 @@ public class TacoOrder implements Serializable {
     private String ccCVV;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Taco> tacos = new ArrayList<>();
+    @ManyToOne
+    private User user;
 
     public void addTaco(Taco taco) {
         this.tacos.add(taco);

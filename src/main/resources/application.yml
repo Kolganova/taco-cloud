@@ -4,6 +4,7 @@ spring:
   datasource:
     generate-unique-name: false
     name: tacocloud
+
   security:
     oauth2:
       client:
@@ -12,3 +13,31 @@ spring:
             client-id: <facebook client id>
             client-secret: < facebook client secret>
             scope: email, public_profile
+  sql:
+    init:
+      schema-locations:
+        - order-schema.sql
+        - ingredient-schema.sql
+        - taco-schema.sql
+        - user-schema.sql
+      data-locations:
+        - ingredient.sql
+
+server:
+  port: 8443
+  ssl:
+    key-store: file:///path/to/mykeys.jks
+    key-store-password: letmein
+    key-password: letmein
+
+logging:
+  file:
+    path: /var/logs/
+    name: TacoCloud.log
+  level:
+    root: WARN
+    org.springframework.security: DEBUG
+
+taco:
+  orders:
+    pageSize: 10
