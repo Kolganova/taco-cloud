@@ -1,5 +1,6 @@
 package tacos.web.api;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,15 +17,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "api/tacos",
         produces = {"application/json", "text/xml"})
-@CrossOrigin(origins = "http://tacocloud:8080")
+@CrossOrigin(origins = "http://tacocloud:8445")
+@RequiredArgsConstructor
 public class TacoController {
 
-    private TacoRepository tacoRepository;
+    private final TacoRepository tacoRepository;
     private OrderRepository orderRepository;
-
-    public TacoController(TacoRepository tacoRepository) {
-        this.tacoRepository = tacoRepository;
-    }
 
     @GetMapping(params = "recent")
     public Iterable<Taco> recentTacos() {
@@ -35,11 +33,8 @@ public class TacoController {
     @GetMapping("/{id}")
     public ResponseEntity<Taco> tacoById(@PathVariable("id") Long id) {
         Optional<Taco> optTaco = tacoRepository.findById(id);
-        if (optTaco.isPresent()) {
-            return new ResponseEntity<>(optTaco.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+        return optTaco.map(taco -> new ResponseEntity<>(taco, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PostMapping(consumes = "application/json")
@@ -84,7 +79,7 @@ public class TacoController {
     public void deleteOrder(@PathVariable("orderId") Long orderId) {
         try {
             tacoRepository.deleteById(orderId);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException ignored) {
         }
     }
 
