@@ -2,8 +2,10 @@ spring:
   thymeleaf:
     cache: false
   datasource:
-    generate-unique-name: false
-    name: tacocloud
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/taco_cloud
+    username: postgres
+    password: pass
 
   security:
     oauth2:
@@ -13,30 +15,27 @@ spring:
             client-id: <facebook client id>
             client-secret: < facebook client secret>
             scope: email, public_profile
-  sql:
-    init:
-      schema-locations:
-        - order-schema.sql
-        - ingredient-schema.sql
-        - taco-schema.sql
-        - user-schema.sql
-      data-locations:
-        - ingredient.sql
+
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        hbm2ddl:
+          auto: update
+    show_sql: true
 
 server:
-  port: 8443
-  ssl:
-    key-store: file:///path/to/mykeys.jks
-    key-store-password: letmein
-    key-password: letmein
+  port: 8445
 
-logging:
-  file:
-    path: /var/logs/
-    name: TacoCloud.log
-  level:
-    root: WARN
-    org.springframework.security: DEBUG
+#logging:
+#  file:
+#    path: /var/logs/
+#    name: TacoCloud.log
+#  level:
+#    root: WARN
+#    org.springframework.security: DEBUG
 
 taco:
   orders:
